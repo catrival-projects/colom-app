@@ -2,18 +2,8 @@
  * Nominatim Service
  * Responsible for fetching geographic coordinates from OpenStreetMap's Nominatim API
  */
-
-export interface NominatimCoordinates {
-  lat: number;
-  lon: number;
-}
-
-export interface NominatimResult {
-  lat: string;
-  lon: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
+export type { NominatimCoordinates, NominatimResult } from '@/types/nominatim';
+import type { NominatimCoordinates, NominatimResult } from '@/types/nominatim';
 
 export class NominatimService {
   private static readonly BASE_URL = 'https://nominatim.openstreetmap.org/search';

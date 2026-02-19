@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Figtree } from 'next/font/google';
+import Navbar from '@/components/shared/navbar';
 import './globals.css';
 
 const figtree = Figtree({ subsets: ['latin'], variable: '--font-sans' });
@@ -25,8 +26,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={figtree.variable}>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+    <html lang="es" suppressHydrationWarning className={figtree.variable}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Navbar />
+        {children}
+      </body>
     </html>
   );
 }
