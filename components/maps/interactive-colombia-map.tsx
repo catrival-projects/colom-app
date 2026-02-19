@@ -51,11 +51,8 @@ export default function InteractiveColombiaMap({
     }
 
     return () => {
-      // Clean up the script when the component unmounts.
-      const existingScript = document.getElementById(scriptId);
-      if (existingScript && existingScript.parentNode) {
-        existingScript.parentNode.removeChild(existingScript);
-      }
+      // Solo limpia el callback para evitar fugas, pero no elimines el script global
+      if (script) script.onload = null;
     };
   }, []);
 
