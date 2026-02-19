@@ -4,7 +4,6 @@ import { useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CityData } from '@/types/city-data';
-import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { OpenStreetMap, GoogleMap } from '@/components/maps';
 import { fetchCityById } from '@/services/city-service';
 
@@ -40,7 +39,6 @@ export default function CityPage() {
 
   return (
     <div className="max-w-2xl mx-auto py-8">
-      <Breadcrumb />
       <Card>
         <CardHeader>
           <CardTitle>{city.name}</CardTitle>

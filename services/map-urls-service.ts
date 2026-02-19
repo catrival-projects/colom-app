@@ -1,16 +1,9 @@
+import type { MapUrlConfig } from '../types/map-url-config';
+
 /**
  * Map URL Service
  * Responsible for generating map embed URLs for different providers
  */
-import { NominatimCoordinates } from './nominatim-service';
-
-export interface MapUrlConfig {
-  cityName: string;
-  coordinates?: NominatimCoordinates | null;
-  apiKey?: string;
-  isDepartment?: boolean;
-}
-
 export class MapUrlService {
   /** Generate OpenStreetMap embed URL with bounding box. */
   static generateOpenStreetMapUrl(config: MapUrlConfig): string | null {

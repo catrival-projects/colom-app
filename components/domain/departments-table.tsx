@@ -5,6 +5,7 @@ import { normalize } from '@/lib/utils';
 import { useReactTable, ColumnDef, getCoreRowModel, flexRender } from '@tanstack/react-table';
 import { Department } from '@/types/department';
 
+/* The departments table component. */
 interface DepartmentsTableProps {
   data: Department[];
 }
@@ -129,7 +130,7 @@ export default function DepartmentsTable({ data }: DepartmentsTableProps) {
   const [maxHeight, setMaxHeight] = React.useState(600);
   React.useEffect(() => {
     function updateHeight() {
-      setMaxHeight(window.innerHeight - 200); // 200px margin for top/bottom.
+      setMaxHeight(window.innerHeight - 280); // 280px margin for top/bottom.
     }
     updateHeight();
     window.addEventListener('resize', updateHeight);
