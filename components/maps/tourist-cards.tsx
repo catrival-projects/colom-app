@@ -34,8 +34,7 @@ function mulberry32(a: number) {
 }
 
 export default function TouristCards({ attractions }: TouristCardsProps) {
-  // eslint-disable-next-line react-hooks/purity
-  const [seed, setSeed] = useState(Date.now());
+  const [seed, setSeed] = useState(() => Date.now());
   const randomAttractions = useMemo(
     () => getRandomItems(attractions, 4, seed),
     [attractions, seed]

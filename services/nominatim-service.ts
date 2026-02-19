@@ -2,8 +2,8 @@
  * Nominatim Service
  * Responsible for fetching geographic coordinates from OpenStreetMap's Nominatim API
  */
-
-import type { NominatimCoordinates, NominatimResult } from '../types/nominatim';
+export type { NominatimCoordinates, NominatimResult } from '@/types/nominatim';
+import type { NominatimCoordinates, NominatimResult } from '@/types/nominatim';
 
 export class NominatimService {
   private static readonly BASE_URL = 'https://nominatim.openstreetmap.org/search';

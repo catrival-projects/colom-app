@@ -12,5 +12,10 @@ export const fetchAirports = async (): Promise<Airport[]> => {
   if (!response.ok) {
     throw new Error('Error fetching airports');
   }
-  return response.json();
+  const data = await response.json();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return data.map((airport: any) => ({
+    ...airport,
+    departmentId: airport.departmentId ?? airport.deparmentId,
+  }));
 };

@@ -39,10 +39,10 @@ export default function Navbar({ className }: { className?: string }) {
             <NavigationMenuItem>
               <NavigationMenuLink
                 href="/departments"
-                active={pathname.startsWith('/departments')}
+                active={pathname.startsWith('/departments') || pathname.startsWith('/department')}
                 className={cn(
                   'text-sm font-normal rounded-lg px-3 py-1.5 transition-colors',
-                  pathname.startsWith('/departments')
+                  pathname.startsWith('/departments') || pathname.startsWith('/department')
                     ? 'bg-accent text-white font-semibold'
                     : 'text-gray-700 hover:bg-gray-200 hover:text-black hover:font-semibold',
                   'data-[state=open]:bg-accent data-[state=open]:text-white data-[state=open]:font-semibold',
@@ -55,10 +55,10 @@ export default function Navbar({ className }: { className?: string }) {
             <NavigationMenuItem>
               <NavigationMenuLink
                 href="/cities"
-                active={pathname.startsWith('/cities')}
+                active={pathname.startsWith('/cities') || pathname.startsWith('/city')}
                 className={cn(
                   'text-sm font-normal rounded-lg px-3 py-1.5 transition-colors',
-                  pathname.startsWith('/cities')
+                  pathname.startsWith('/cities') || pathname.startsWith('/city')
                     ? 'bg-accent text-white font-semibold'
                     : 'text-gray-700 hover:bg-gray-200 hover:text-black hover:font-semibold',
                   'data-[state=open]:bg-accent data-[state=open]:text-white data-[state=open]:font-semibold',

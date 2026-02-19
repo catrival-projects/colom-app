@@ -1,5 +1,3 @@
-'use client';
-
 import Header from '@/components/shared/header';
 import MapDataLoader from '@/components/maps/map-data-loader';
 

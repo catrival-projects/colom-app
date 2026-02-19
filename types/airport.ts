@@ -5,7 +5,7 @@ export interface Airport {
   iataCode: string;
   oaciCode: string;
   type: string;
-  deparmentId: number;
+  departmentId: number;
   department: string;
   cityId: number;
   city: string;

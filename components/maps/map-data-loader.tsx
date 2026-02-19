@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useState } from 'react';
 import InteractiveColombiaMap from './interactive-colombia-map';
 import TouristCards from './tourist-cards';

@@ -34,42 +34,66 @@ export default function InteractiveColombiaMap({
       return;
     }
 
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => setTimeout(() => setMapScript(true), 0);
-    document.head.appendChild(script);
+    const scriptId = 'google-maps-script';
+    let script = document.getElementById(scriptId) as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement('script');
+      script.id = scriptId;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => setMapScript(true);
+      document.head.appendChild(script);
+    } else if (window.google && window.google.maps) {
+      setTimeout(() => setMapScript(true), 0);
+    } else {
+      script.onload = () => setMapScript(true);
+    }
+
+    return () => {
+      // Clean up the script when the component unmounts.
+      const existingScript = document.getElementById(scriptId);
+      if (existingScript && existingScript.parentNode) {
+        existingScript.parentNode.removeChild(existingScript);
+      }
+    };
   }, []);
 
   useEffect(() => {
     if (!mapScript || !mapRef.current) return;
     if (!window.google || !window.google.maps) return;
 
-    const map = new window.google.maps.Map(mapRef.current, {
-      center: COLOMBIA_CENTER,
-      zoom: 5,
-      mapTypeId: 'terrain',
-      styles: [
-        {
-          featureType: 'administrative',
-          elementType: 'labels.text.fill',
-          stylers: [{ color: '#444444' }],
-        },
-        {
-          featureType: 'landscape',
-          elementType: 'all',
-          stylers: [{ color: '#f2f2f2' }],
-        },
-        {
-          featureType: 'water',
-          elementType: 'all',
-          stylers: [{ color: '#c6d9ff' }, { visibility: 'on' }],
-        },
-      ],
-    });
+    const existingMap = (mapRef.current as HTMLElement & { __googleMap?: google.maps.Map })
+      .__googleMap as google.maps.Map | undefined;
+    const map =
+      existingMap ||
+      new window.google.maps.Map(mapRef.current, {
+        center: COLOMBIA_CENTER,
+        zoom: 5,
+        mapTypeId: 'terrain',
+        styles: [
+          {
+            featureType: 'administrative',
+            elementType: 'labels.text.fill',
+            stylers: [{ color: '#444444' }],
+          },
+          {
+            featureType: 'landscape',
+            elementType: 'all',
+            stylers: [{ color: '#f2f2f2' }],
+          },
+          {
+            featureType: 'water',
+            elementType: 'all',
+            stylers: [{ color: '#c6d9ff' }, { visibility: 'on' }],
+          },
+        ],
+      });
+    if (!existingMap) {
+      (mapRef.current as HTMLElement & { __googleMap?: google.maps.Map }).__googleMap = map;
+    }
 
-    // Agregar marcadores de aeropuertos
+    // Add markers for airports.
     if (activeLayers.includes('airports') && airports.length > 0) {
       airports.forEach((airport) => {
         if (
@@ -95,7 +119,7 @@ export default function InteractiveColombiaMap({
       });
     }
 
-    // Agregar marcadores de atracciones
+    // Add markers for attractions.
     if (activeLayers.includes('attractions') && attractions.length > 0) {
       attractions.forEach((attraction) => {
         const lat = parseFloat(attraction.latitude);
