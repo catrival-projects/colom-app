@@ -13,7 +13,7 @@ export default function Navbar({ className }: { className?: string }) {
   return (
     <nav
       className={cn(
-        'w-full sticky top-0 z-50 bg-background/80 border-b border-border backdrop-blur-md supports-[backdrop-filter]:bg-background/60 shadow-sm',
+        'w-full sticky top-0 z-50 bg-background/80 border-b border-border backdrop-blur-md supports-backdrop-filter:bg-background/60 shadow-sm',
         className
       )}
     >

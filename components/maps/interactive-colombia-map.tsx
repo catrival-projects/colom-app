@@ -145,7 +145,7 @@ export default function InteractiveColombiaMap({
       <LayerToggle activeLayers={activeLayers} onLayerToggle={handleLayerToggle} />
 
       <div className="relative group">
-        <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-accent/20 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+        <div className="absolute -inset-1 bg-linear-to-r from-primary/20 to-accent/20 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
         <div className="relative bg-card rounded-2xl border border-border/60 shadow-lg overflow-hidden">
           <div ref={mapRef} className="w-full h-[500px] md:h-[600px] bg-muted/20" />
         </div>

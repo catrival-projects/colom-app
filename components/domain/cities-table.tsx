@@ -1,5 +1,7 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
+import { MagnifyingGlassIcon } from '@phosphor-icons/react';
 import { Input } from '@/components/ui/input';
 import { normalize } from '@/lib/utils';
 import { useReactTable, ColumnDef, getCoreRowModel, flexRender } from '@tanstack/react-table';
@@ -114,15 +116,7 @@ export default function CitiesTable({ pageSize = 20 }: CitiesTableProps) {
       {/* Search Bar */}
       <div className="flex items-center gap-2 max-w-sm bg-background/50 backdrop-blur-sm p-1 rounded-lg border border-border/50 shadow-sm focus-within:ring-1 focus-within:ring-ring transition-all">
         <div className="pl-2 text-muted-foreground">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            viewBox="0 0 256 256"
-          >
-            <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
-          </svg>
+          <MagnifyingGlassIcon size={16} weight="regular" />
         </div>
         <Input
           placeholder="Buscar ciudad o departamento..."
@@ -136,7 +130,7 @@ export default function CitiesTable({ pageSize = 20 }: CitiesTableProps) {
       <div
         onScroll={handleScroll}
         className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur-sm overflow-hidden relative"
-        style={{ maxHeight: 600, overflowY: 'auto' }}
+        style={{ maxHeight: 395, overflowY: 'auto' }}
       >
         <Table>
           <TableHeader className="bg-muted/50 text-muted-foreground font-medium border-b border-border/60 sticky top-0 z-10 backdrop-blur-md">
@@ -169,7 +163,15 @@ export default function CitiesTable({ pageSize = 20 }: CitiesTableProps) {
           </TableBody>
         </Table>
         {loading && (
-          <div className="p-4 text-center text-muted-foreground">Cargando ciudades...</div>
+          <div className="flex items-center justify-center p-8">
+            <Image
+              src="/loader.svg"
+              alt="Cargando..."
+              width={48}
+              height={48}
+              className="animate-spin"
+            />
+          </div>
         )}
         {!hasMore && !loading && (
           <div className="p-4 text-center text-muted-foreground text-xs">

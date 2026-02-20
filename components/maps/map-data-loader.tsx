@@ -6,6 +6,7 @@ import { fetchTouristicAttractions } from '@/services/touristic-attraction-servi
 import { fetchAirports } from '@/services/airport-service';
 import type { Airport } from '@/types/airport';
 import type { TouristicAttraction } from '@/types/touristic-attraction';
+import Image from 'next/image';
 
 export default function MapDataLoader() {
   const [attractions, setAttractions] = useState<TouristicAttraction[]>([]);
@@ -33,7 +34,13 @@ export default function MapDataLoader() {
   if (loading)
     return (
       <div className="flex items-center justify-center h-screen">
-        Cargando Colombia en un vistazo...
+        <Image
+          src="/loader.svg"
+          alt="Cargando..."
+          width={64}
+          height={64}
+          className="animate-spin"
+        />
       </div>
     );
 

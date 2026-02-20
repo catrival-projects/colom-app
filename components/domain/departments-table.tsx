@@ -1,5 +1,7 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
+import { MagnifyingGlassIcon } from '@phosphor-icons/react';
 import { Input } from '@/components/ui/input';
 import { normalize } from '@/lib/utils';
 import { useReactTable, ColumnDef, getCoreRowModel, flexRender } from '@tanstack/react-table';
@@ -88,21 +90,12 @@ function DescriptionCell({ description }: { description: string }) {
             ? 'block whitespace-pre-line'
             : 'line-clamp-2 block overflow-hidden text-ellipsis whitespace-pre-line'
         }
-        style={{
-          display: '-webkit-box',
-          WebkitLineClamp: expanded ? 'unset' : 2,
-          WebkitBoxOrient: 'vertical',
-          WebkitBoxAlign: 'start',
-          overflow: expanded ? 'visible' : 'hidden',
-          textOverflow: 'ellipsis',
-          width: '100%',
-        }}
       >
         {description}
       </span>
       {isLong && (
         <button
-          className="text-blue-600 hover:underline ml-2 text-xs cursor-pointer"
+          className="text-blue-600 hover:underline ml-2 text-xs"
           onClick={() => setExpanded((v) => !v)}
         >
           {expanded ? 'Ver menos' : 'Ver más'}
@@ -139,15 +132,7 @@ export default function DepartmentsTable({ data }: DepartmentsTableProps) {
       {/* Search Bar - Floating above */}
       <div className="flex items-center gap-2 max-w-sm bg-background/50 backdrop-blur-sm p-1 rounded-lg border border-border/50 shadow-sm focus-within:ring-1 focus-within:ring-ring transition-all">
         <div className="pl-2 text-muted-foreground">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            viewBox="0 0 256 256"
-          >
-            <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
-          </svg>
+          <MagnifyingGlassIcon size={16} weight="regular" />
         </div>
         <Input
           placeholder="Buscar territorio..."
@@ -158,9 +143,14 @@ export default function DepartmentsTable({ data }: DepartmentsTableProps) {
       </div>
 
       {/* Topographic Card Container */}
-      <div className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur-sm overflow-hidden relative max-h-[calc(100vh-305px)] overflow-y-auto">
+      <div
+        className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur-sm overflow-hidden relative overflow-y-auto"
+        style={{
+          maxHeight: `calc(100vh - var(--header-height, 220px) - var(--search-bar-height, 85px))`,
+        }}
+      >
         <Table>
-          <TableHeader className="bg-muted/50 text-muted-foreground font-medium border-b border-border/60">
+          <TableHeader className="bg-muted/50 text-muted-foreground font-medium border-b border-border/60 sticky top-0 z-10 backdrop-blur-md">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent border-border/60">
                 {headerGroup.headers.map((header) => (
