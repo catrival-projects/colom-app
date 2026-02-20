@@ -29,7 +29,7 @@ function Departments({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="departments"
       className={cn(
-        'mx-auto w-full max-w-5xl min-w-0 content-center items-start gap-8 p-4 pt-2 sm:gap-12 sm:p-6 lg:p-12 2xl:max-w-6xl',
+        'mx-auto w-full max-w-5xl min-w-0 content-center items-start gap-8 p-4 pt-2 sm:gap-12 sm:p-6 lg:p-10 2xl:max-w-6xl',
         className
       )}
       {...props}

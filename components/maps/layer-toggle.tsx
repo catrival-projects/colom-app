@@ -10,29 +10,26 @@ interface LayerToggleProps {
 
 export default function LayerToggle({ activeLayers, onLayerToggle }: LayerToggleProps) {
   return (
-    <div className="w-full bg-white rounded-lg shadow-md p-4 mb-2">
-      <h3 className="text-lg font-semibold mb-3">Capas del Mapa</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        {MAP_LAYERS.map((layer) => (
-          <button
-            key={layer.id}
-            onClick={() => onLayerToggle(layer.id)}
-            className={cn(
-              'p-3 rounded-lg border-2 transition-all text-left',
-              activeLayers.includes(layer.id)
-                ? 'border-blue-600 bg-blue-50'
-                : 'border-gray-300 bg-gray-50 hover:border-blue-400'
-            )}
-          >
-            <div className="flex items-start gap-2">
-              <span className="text-2xl">{layer.icon}</span>
-              <div>
-                <p className="font-semibold text-sm">{layer.label}</p>
-                <p className="text-xs text-gray-600">{layer.description}</p>
-              </div>
-            </div>
-          </button>
-        ))}
+    <div className="w-full flex justify-center mb-4">
+      <div className="bg-background/80 backdrop-blur-md rounded-full border border-border/50 p-1.5 shadow-lg inline-flex gap-2">
+        {MAP_LAYERS.map((layer) => {
+          const isActive = activeLayers.includes(layer.id);
+          return (
+            <button
+              key={layer.id}
+              onClick={() => onLayerToggle(layer.id)}
+              className={cn(
+                'px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 border cursor-pointer',
+                isActive
+                  ? 'bg-primary text-primary-foreground border-primary shadow-[0_2px_10px_-2px_var(--color-primary)] scale-105'
+                  : 'bg-transparent text-muted-foreground border-transparent hover:bg-secondary/50 hover:text-foreground'
+              )}
+            >
+              <span className="text-lg">{layer.icon}</span>
+              <span>{layer.label}</span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

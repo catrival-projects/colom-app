@@ -53,7 +53,7 @@ export default function TouristCards({ attractions }: TouristCardsProps) {
           type="button"
           aria-label="Refrescar tarjetas"
           onClick={handleRefresh}
-          className="ml-2 px-2 py-1 rounded bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs border border-blue-200 transition-colors flex items-center gap-1"
+          className="ml-2 px-2 py-1 rounded bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs border border-blue-200 transition-colors flex items-center gap-1 cursor-pointer"
         >
           <ArrowClockwiseIcon className="size-4" />
         </button>

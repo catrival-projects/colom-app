@@ -1,0 +1,43 @@
+# Project: colom-app
+
+## Overview
+This is a Next.js application focused on displaying information about Colombia's departments, cities, and tourist attractions. It includes interactive map features.
+
+## Tech Stack
+-   **Framework**: Next.js 16 (App Router)
+-   **Language**: TypeScript
+-   **Styling**: Tailwind CSS 4
+-   **UI Library**: shadcn/ui (radix-ui based), tailwind-animate
+-   **Icons**: @phosphor-icons/react
+-   **Maps**: Google Maps API (@types/google.maps)
+-   **Data Display**: @tanstack/react-table
+-   **Carousel**: embla-carousel-react
+
+## Project Structure
+-   `app/`: Next.js App Router pages and layouts.
+-   `components/`: React components organized by feature.
+    -   `domain/`: Business logic components (e.g., `departments-table`, `cities-table`).
+    -   `maps/`: Map-related components (`interactive-colombia-map`, `layer-toggle`).
+    -   `shared/`: Reusable UI components (`navbar`, `header`).
+    -   `ui/`: Base UI components (likely shadcn/ui).
+-   `lib/`: Utility functions (`utils.ts`).
+-   `services/`: API data fetching services.
+-   `types/`: TypeScript type definitions (`department`, `city`, `touristic-attraction`).
+-   `public/`: Static assets.
+
+## Key Conventions
+-   **Styling**: Use Tailwind CSS utility classes. Avoid custom CSS when possible.
+-   **Components**: Functional components with TypeScript interfaces for props.
+-   **State**: Use React hooks (`useState`, `useEffect`, `useMemo`).
+-   **Routing**: Next.js 13+ App Router conventions.
+
+## Core Features
+1.  **Departments & Cities**: Tables and detail views for administrative divisions.
+2.  **Interactive Map**: Google Maps integration showing departments, attractions, and airports.
+3.  **Tourist Attractions**: Cards and map markers for points of interest.
+
+## Design System: "Colombia - Biodiversity & Heritage"
+-   **Theme**: "Mist" backgrounds, "Emerald" accents, "Coffee" text.
+-   **Signature Element**: "Topographic Card" (Subtle borders, Bloom hover effects).
+-   **UI Components**: Uses `shadcn/ui` primitives with custom styling tokens.
+-   **Maps**: "Rough Edge" containers and "Gemstone" floating controls.
