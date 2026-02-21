@@ -27,7 +27,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning className={figtree.variable}>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
+      >
         <Navbar />
         {children}
       </body>

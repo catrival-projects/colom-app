@@ -13,7 +13,7 @@ export default function Navbar({ className }: { className?: string }) {
   return (
     <nav
       className={cn(
-        'w-full sticky top-0 z-50 bg-white/90 border-b border-border/60 backdrop-blur supports-backdrop-filter:bg-white/80',
+        'w-full sticky top-0 z-50 bg-background/80 border-b border-border backdrop-blur-md supports-backdrop-filter:bg-background/60 shadow-sm',
         className
       )}
     >
@@ -25,12 +25,11 @@ export default function Navbar({ className }: { className?: string }) {
                 href="/"
                 active={pathname === '/'}
                 className={cn(
-                  'text-sm font-normal rounded-lg px-3 py-1.5 transition-colors',
+                  'text-sm font-medium rounded-md px-4 py-2 transition-all duration-200',
                   pathname === '/'
-                    ? 'bg-accent text-white font-semibold'
-                    : 'text-gray-700 hover:bg-gray-200 hover:text-black hover:font-semibold',
-                  'data-[state=open]:bg-accent data-[state=open]:text-white data-[state=open]:font-semibold',
-                  'focus:bg-gray-200 focus:text-black'
+                    ? 'bg-primary/10 text-primary font-semibold shadow-sm ring-1 ring-primary/20'
+                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
+                  'focus:bg-secondary focus:text-foreground outline-none'
                 )}
               >
                 Inicio
@@ -41,12 +40,11 @@ export default function Navbar({ className }: { className?: string }) {
                 href="/departments"
                 active={pathname.startsWith('/departments') || pathname.startsWith('/department')}
                 className={cn(
-                  'text-sm font-normal rounded-lg px-3 py-1.5 transition-colors',
+                  'text-sm font-medium rounded-md px-4 py-2 transition-all duration-200',
                   pathname.startsWith('/departments') || pathname.startsWith('/department')
-                    ? 'bg-accent text-white font-semibold'
-                    : 'text-gray-700 hover:bg-gray-200 hover:text-black hover:font-semibold',
-                  'data-[state=open]:bg-accent data-[state=open]:text-white data-[state=open]:font-semibold',
-                  'focus:bg-gray-200 focus:text-black'
+                    ? 'bg-primary/10 text-primary font-semibold shadow-sm ring-1 ring-primary/20'
+                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
+                  'focus:bg-secondary focus:text-foreground outline-none'
                 )}
               >
                 Departamentos
@@ -57,12 +55,11 @@ export default function Navbar({ className }: { className?: string }) {
                 href="/cities"
                 active={pathname.startsWith('/cities') || pathname.startsWith('/city')}
                 className={cn(
-                  'text-sm font-normal rounded-lg px-3 py-1.5 transition-colors',
+                  'text-sm font-medium rounded-md px-4 py-2 transition-all duration-200',
                   pathname.startsWith('/cities') || pathname.startsWith('/city')
-                    ? 'bg-accent text-white font-semibold'
-                    : 'text-gray-700 hover:bg-gray-200 hover:text-black hover:font-semibold',
-                  'data-[state=open]:bg-accent data-[state=open]:text-white data-[state=open]:font-semibold',
-                  'focus:bg-gray-200 focus:text-black'
+                    ? 'bg-primary/10 text-primary font-semibold shadow-sm ring-1 ring-primary/20'
+                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
+                  'focus:bg-secondary focus:text-foreground outline-none'
                 )}
               >
                 Ciudades

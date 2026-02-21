@@ -1,5 +1,7 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
+import { MagnifyingGlassIcon } from '@phosphor-icons/react';
 import { Input } from '@/components/ui/input';
 import { normalize } from '@/lib/utils';
 import { useReactTable, ColumnDef, getCoreRowModel, flexRender } from '@tanstack/react-table';
@@ -27,7 +29,7 @@ const columns: ColumnDef<CityData>[] = [
       return (
         <a
           href={`/city/${city.id}`}
-          className="w-20 md:w-35 block truncate text-blue-600 hover:underline"
+          className="w-20 md:w-36 block truncate text-blue-600 hover:underline"
         >
           {city.name}
         </a>
@@ -79,23 +81,18 @@ export default function CitiesTable({ pageSize = 20 }: CitiesTableProps) {
     };
   }, [page, pageSize]);
 
-  // Scroll infinito
-  const tableContainerRef = React.useRef<HTMLDivElement>(null);
-  React.useEffect(() => {
-    const handleScroll = () => {
-      const el = tableContainerRef.current;
-      if (!el || loading || !hasMore) return;
+  // Scroll infinito via onScroll prop
+  const handleScroll = React.useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const el = e.currentTarget;
+      if (loading || !hasMore) return;
       // Solo cargar siguiente página si no estamos ya en la última
-      if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100 && !loading) {
+      if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100) {
         setPage((p) => p + 1);
       }
-    };
-    const el = tableContainerRef.current;
-    if (el) el.addEventListener('scroll', handleScroll);
-    return () => {
-      if (el) el.removeEventListener('scroll', handleScroll);
-    };
-  }, [loading, hasMore]);
+    },
+    [loading, hasMore]
+  );
 
   // Filtro local por nombre o departamento
   const filteredData = React.useMemo(() => {
@@ -115,32 +112,52 @@ export default function CitiesTable({ pageSize = 20 }: CitiesTableProps) {
   });
 
   return (
-    <div>
-      <div className="mb-4 max-w-xs">
+    <div className="space-y-4">
+      {/* Search Bar */}
+      <div className="flex items-center gap-2 max-w-sm bg-background/50 backdrop-blur-sm p-1 rounded-lg border border-border/50 shadow-sm focus-within:ring-1 focus-within:ring-ring transition-all">
+        <div className="pl-2 text-muted-foreground">
+          <MagnifyingGlassIcon size={16} weight="regular" />
+        </div>
         <Input
-          placeholder="Buscar ciudad o departamento..."
+          placeholder="Buscar territorio..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          className="border-none shadow-none focus-visible:ring-0 bg-transparent h-9 placeholder:text-muted-foreground/70"
         />
       </div>
-      <div ref={tableContainerRef} style={{ maxHeight: 600, overflowY: 'auto' }}>
+
+      {/* Table Container with Infinite Scroll */}
+      <div
+        onScroll={handleScroll}
+        className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur-sm overflow-hidden relative"
+        style={{
+          maxHeight: `calc(100vh - var(--header-height, 220px) - var(--search-bar-height, 85px))`,
+          overflowY: 'auto',
+        }}
+      >
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-muted/50 text-muted-foreground font-medium border-b border-border/60 sticky top-0 z-10 backdrop-blur-md">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="hover:bg-transparent border-border/60">
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className="px-6 py-4 font-semibold tracking-tight first:pl-6 last:pr-6 whitespace-nowrap text-foreground"
+                  >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="divide-y divide-border/40">
             {table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
+              <TableRow
+                key={row.id}
+                className="group transition-colors hover:bg-accent/30 hover:shadow-[inset_2px_0_0_0_var(--color-primary)] border-border/40"
+              >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell key={cell.id} className="px-6 py-4 first:pl-6 last:pr-6 align-top">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -148,8 +165,25 @@ export default function CitiesTable({ pageSize = 20 }: CitiesTableProps) {
             ))}
           </TableBody>
         </Table>
-        {loading && <div className="p-4 text-center">Cargando...</div>}
-        {!hasMore && <div className="p-4 text-center text-gray-500">No hay más ciudades.</div>}
+        {loading && (
+          <div className="flex items-center justify-center p-8">
+            <Image
+              src="/loader.svg"
+              alt="Cargando..."
+              width={48}
+              height={48}
+              className="animate-spin"
+            />
+          </div>
+        )}
+        {!hasMore && !loading && (
+          <div className="p-4 text-center text-muted-foreground text-xs">
+            No hay más ciudades para mostrar.
+          </div>
+        )}
+      </div>
+      <div className="text-xs text-muted-foreground text-center mt-4">
+        Mostrando {filteredData.length} ciudades
       </div>
     </div>
   );

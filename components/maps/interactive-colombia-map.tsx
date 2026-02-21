@@ -141,19 +141,20 @@ export default function InteractiveColombiaMap({
   }, [mapScript, activeLayers, attractions, airports]);
 
   return (
-    <div className="w-full max-w-4xl">
+    <div className="w-full max-w-5xl mx-auto space-y-4">
       <LayerToggle activeLayers={activeLayers} onLayerToggle={handleLayerToggle} />
 
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div
-          ref={mapRef}
-          className="w-full h-96 md:h-125 bg-gray-100 flex items-center justify-center"
-          style={{ minHeight: '400px' }}
-        />
+      <div className="relative group">
+        <div className="absolute -inset-1 bg-linear-to-r from-primary/20 to-accent/20 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+        <div className="relative bg-card rounded-2xl border border-border/60 shadow-lg overflow-hidden">
+          <div ref={mapRef} className="w-full h-[500px] md:h-[600px] bg-muted/20" />
+        </div>
       </div>
 
-      <div className="mt-4 text-sm text-gray-600 text-center">
-        <p>Interactúa con las capas para explorar diferentes zonas de Colombia</p>
+      <div className="mt-4 flex justify-center">
+        <div className="px-4 py-2 bg-background/50 backdrop-blur-sm rounded-full border border-border/50 text-xs text-muted-foreground shadow-sm">
+          Interactúa con las capas para explorar la riqueza de Colombia
+        </div>
       </div>
     </div>
   );
