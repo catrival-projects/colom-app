@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import Image from 'next/image';
 import { MagnifyingGlassIcon } from '@phosphor-icons/react';
 import { Input } from '@/components/ui/input';
 import { normalize } from '@/lib/utils';
@@ -14,10 +13,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import Image from 'next/image';
 
 /* The departments table component. */
 interface DepartmentsTableProps {
   data: Department[];
+  loading: boolean;
 }
 
 const columns: ColumnDef<Department>[] = [
@@ -83,19 +84,28 @@ function DescriptionCell({ description }: { description: string }) {
   const [expanded, setExpanded] = React.useState(false);
   const isLong = description.length > 120;
   return (
-    <div className="min-w-44 sm:min-w-56 md:min-w-72 w-full">
+    <div className="max-w-xs md:max-w-md w-full">
       <span
         className={
           expanded
             ? 'block whitespace-pre-line'
             : 'line-clamp-2 block overflow-hidden text-ellipsis whitespace-pre-line'
         }
+        style={
+          !expanded
+            ? {
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+              }
+            : {}
+        }
       >
         {description}
       </span>
       {isLong && (
         <button
-          className="text-blue-600 hover:underline ml-2 text-xs"
+          className="text-blue-600 hover:underline mt-1 text-xs"
           onClick={() => setExpanded((v) => !v)}
         >
           {expanded ? 'Ver menos' : 'Ver más'}
@@ -105,7 +115,7 @@ function DescriptionCell({ description }: { description: string }) {
   );
 }
 
-export default function DepartmentsTable({ data }: DepartmentsTableProps) {
+export default function DepartmentsTable({ data, loading = false }: DepartmentsTableProps) {
   // Status for the search term.
   const [search, setSearch] = React.useState('');
 
@@ -135,7 +145,7 @@ export default function DepartmentsTable({ data }: DepartmentsTableProps) {
           <MagnifyingGlassIcon size={16} weight="regular" />
         </div>
         <Input
-          placeholder="Buscar territorio..."
+          placeholder="Buscar ciudad o departamento..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="border-none shadow-none focus-visible:ring-0 bg-transparent h-9 placeholder:text-muted-foreground/70"
@@ -179,8 +189,19 @@ export default function DepartmentsTable({ data }: DepartmentsTableProps) {
             ))}
           </TableBody>
         </Table>
+        {loading && (
+          <div className="flex items-center justify-center p-8">
+            <Image
+              src="/loader.svg"
+              alt="Cargando..."
+              width={48}
+              height={48}
+              className="animate-spin"
+            />
+          </div>
+        )}
 
-        {filteredData.length === 0 && (
+        {!loading && filteredData.length === 0 && (
           <div className="p-12 text-center text-muted-foreground">
             No se encontraron resultados para &quot;{search}&quot;
           </div>

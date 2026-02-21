@@ -5,14 +5,17 @@ import { Department } from '@/types/department';
 import DepartmentsTable from './departments-table';
 import Header from '@/components/shared/header';
 import { fetchDepartments } from '@/services/department-service';
+import React from 'react';
 
 function Departments({ className, ...props }: React.ComponentProps<'div'>) {
   const [departments, setDepartments] = useState<Department[]>([]);
+  const [loading, setLoading] = React.useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
     async function loadDepartments() {
       try {
+        setLoading(true);
         const data = await fetchDepartments();
         setDepartments(data);
       } catch (err) {
@@ -20,6 +23,8 @@ function Departments({ className, ...props }: React.ComponentProps<'div'>) {
           'Error al obtener los departamentos. ' +
             (err instanceof Error ? err.message : String(err))
         );
+      } finally {
+        setLoading(false);
       }
     }
     loadDepartments();
@@ -36,11 +41,7 @@ function Departments({ className, ...props }: React.ComponentProps<'div'>) {
     >
       <Header title="Departamentos" />
       {error && <div>{error}</div>}
-      {departments.length > 0 ? (
-        <DepartmentsTable data={departments} />
-      ) : (
-        !error && <div>Cargando departamentos...</div>
-      )}
+      <DepartmentsTable data={departments} loading={loading} />
     </div>
   );
 }

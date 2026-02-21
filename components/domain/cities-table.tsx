@@ -119,7 +119,7 @@ export default function CitiesTable({ pageSize = 20 }: CitiesTableProps) {
           <MagnifyingGlassIcon size={16} weight="regular" />
         </div>
         <Input
-          placeholder="Buscar ciudad o departamento..."
+          placeholder="Buscar territorio..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="border-none shadow-none focus-visible:ring-0 bg-transparent h-9 placeholder:text-muted-foreground/70"
@@ -130,7 +130,10 @@ export default function CitiesTable({ pageSize = 20 }: CitiesTableProps) {
       <div
         onScroll={handleScroll}
         className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur-sm overflow-hidden relative"
-        style={{ maxHeight: 395, overflowY: 'auto' }}
+        style={{
+          maxHeight: `calc(100vh - var(--header-height, 220px) - var(--search-bar-height, 85px))`,
+          overflowY: 'auto',
+        }}
       >
         <Table>
           <TableHeader className="bg-muted/50 text-muted-foreground font-medium border-b border-border/60 sticky top-0 z-10 backdrop-blur-md">
