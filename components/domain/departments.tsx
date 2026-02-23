@@ -1,34 +1,21 @@
 'use client';
 import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
-import { Department } from '@/types/department';
+import { useEffect } from 'react';
 import DepartmentsTable from './departments-table';
 import Header from '@/components/shared/header';
-import { fetchDepartments } from '@/services/department-service';
+import { useDepartmentStore } from '@/lib/stores/department-store';
 import React from 'react';
 
 function Departments({ className, ...props }: React.ComponentProps<'div'>) {
-  const [departments, setDepartments] = useState<Department[]>([]);
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = useState('');
+  const { departments, loading, error, hasFetched, fetchDepartments } = useDepartmentStore();
+
+  // Show loading during hydration (hasFetched=false before sessionStorage rehydrates)
+  // and during active API fetches
+  const isLoading = loading || (!hasFetched && !error);
 
   useEffect(() => {
-    async function loadDepartments() {
-      try {
-        setLoading(true);
-        const data = await fetchDepartments();
-        setDepartments(data);
-      } catch (err) {
-        setError(
-          'Error al obtener los departamentos. ' +
-            (err instanceof Error ? err.message : String(err))
-        );
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadDepartments();
-  }, []);
+    fetchDepartments();
+  }, [fetchDepartments]);
 
   return (
     <div
@@ -41,7 +28,7 @@ function Departments({ className, ...props }: React.ComponentProps<'div'>) {
     >
       <Header title="Departamentos" />
       {error && <div>{error}</div>}
-      <DepartmentsTable data={departments} loading={loading} />
+      <DepartmentsTable data={departments} loading={isLoading} />
     </div>
   );
 }

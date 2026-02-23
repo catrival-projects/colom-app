@@ -15,48 +15,71 @@ import {
 } from '@/components/ui/table';
 import { CityData } from '@/types/city-data';
 import { fetchCitiesPaged, CitiesPagedResponse } from '@/services/city-service';
+import { useDepartmentStore } from '@/lib/stores/department-store';
 
 interface CitiesTableProps {
   pageSize?: number;
 }
 
-const columns: ColumnDef<CityData>[] = [
-  {
-    accessorKey: 'name',
-    header: 'Nombre',
-    cell: ({ row }) => {
-      const city = row.original;
-      return (
-        <a
-          href={`/city/${city.id}`}
-          className="w-20 md:w-36 block truncate text-blue-600 hover:underline"
-        >
-          {city.name}
-        </a>
-      );
-    },
-  },
-  {
-    accessorKey: 'population',
-    header: 'Población',
-    cell: ({ getValue }) => (
-      <span className="w-16 md:w-auto block truncate text-left">{getValue() as string}</span>
-    ),
-  },
-];
+function useColumns(): ColumnDef<CityData>[] {
+  const { getDepartmentName } = useDepartmentStore();
+
+  return React.useMemo(
+    () => [
+      {
+        accessorKey: 'name',
+        header: 'Nombre',
+        cell: ({ row }) => {
+          const city = row.original;
+          return (
+            <a
+              href={`/city/${city.id}`}
+              className="w-20 md:w-36 block truncate text-blue-600 hover:underline"
+            >
+              {city.name}
+            </a>
+          );
+        },
+      },
+      {
+        accessorKey: 'departmentId',
+        header: 'Departamento',
+        cell: ({ row }) => {
+          const name = getDepartmentName(row.original.departmentId);
+          return <span className="w-16 md:w-auto block truncate text-left">{name || '—'}</span>;
+        },
+      },
+    ],
+    [getDepartmentName]
+  );
+}
 
 export default function CitiesTable({ pageSize = 20 }: CitiesTableProps) {
+  const { fetchDepartments } = useDepartmentStore();
+  const columns = useColumns();
   const [search, setSearch] = React.useState('');
   const [cities, setCities] = React.useState<CityData[]>([]);
   const [page, setPage] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
   const [hasMore, setHasMore] = React.useState(true);
+  const lastPageRef = React.useRef(0); // Track last page that STARTED loading
+  const isScrollLoadingRef = React.useRef(false); // Synchronous gate for scroll events
+
+  // Ensure departments are loaded for name resolution
+  React.useEffect(() => {
+    fetchDepartments();
+  }, [fetchDepartments]);
 
   // Cargar ciudades iniciales y siguientes páginas al hacer scroll
   React.useEffect(() => {
     let ignore = false;
     async function loadCities() {
+      // Prevent redundant loads if this page is already handled or we are loading
+      if (page <= lastPageRef.current && page !== 1) return;
+
       setLoading(true);
+      lastPageRef.current = page;
+
       try {
         const response: CitiesPagedResponse = await fetchCitiesPaged(page, pageSize);
         const data = response.data || [];
@@ -81,13 +104,20 @@ export default function CitiesTable({ pageSize = 20 }: CitiesTableProps) {
     };
   }, [page, pageSize]);
 
+  // Reset the scroll gate when loading completes
+  React.useEffect(() => {
+    if (!loading) {
+      isScrollLoadingRef.current = false;
+    }
+  }, [loading]);
+
   // Scroll infinito via onScroll prop
   const handleScroll = React.useCallback(
     (e: React.UIEvent<HTMLDivElement>) => {
       const el = e.currentTarget;
-      if (loading || !hasMore) return;
-      // Solo cargar siguiente página si no estamos ya en la última
+      if (isScrollLoadingRef.current || loading || !hasMore) return;
       if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100) {
+        isScrollLoadingRef.current = true; // Gate immediately, before React re-renders
         setPage((p) => p + 1);
       }
     },
