@@ -1,36 +1,140 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Colom App 🇨🇴
 
-## Getting Started
+[![English](https://img.shields.io/badge/lang-en-red.svg)](#english)
+[![Español](https://img.shields.io/badge/lang-es-yellow.svg)](#español)
 
-First, run the development server:
+---
+
+<a name="english"></a>
+
+## 🇺🇸 English
+
+A modern web application built with **Next.js** to explore information about Colombia, using the [API Colombia](https://api-colombia.com/).
+
+### 📸 Screenshots
+
+_(Add your screenshots here)_
+![Main Dashboard](![alt text](image.png))
+![Data View](https://via.placeholder.com/800x450?text=Data+View+Placeholder)
+
+### 🛠️ Tech Stack
+
+- **Framework:** [Next.js 15 (App Router)](https://nextjs.org/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **Components:** [Radix UI](https://www.radix-ui.com/), [Shadcn UI](https://ui.shadcn.com/)
+- **Icons:** [Phosphor Icons](https://phosphoricons.com/)
+- **Table:** [TanStack Table](https://tanstack.com/table)
+- **State Management:** [Zustand](https://zustand-demo.pmnd.rs/) with Persistence
+
+### 🚀 Getting Started
+
+#### Prerequisites
+
+- Node.js (Latest LTS recommended)
+- npm / yarn / pnpm
+
+#### Environment Variables
+
+Create a `.env.local` file in the root directory and add:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+NEXT_PUBLIC_API_COLOMBIA_URL=https://api-colombia.com/api/v1
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> [!IMPORTANT]
+> Google Maps keys must use the `NEXT_PUBLIC_` prefix to be available on the client side.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### Installation & Development
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-## Learn More
+### 📜 Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev`: Starts the development server with Turbopack.
+- `npm run build`: Creates an optimized production build.
+- `npm run start`: Starts the production server.
+- `npm run lint`: Runs ESLint to find code issues.
+- `npm run lint:fix`: Automatically fixes ESLint issues.
+- `npm run format`: Formats code using Prettier.
+- `npm run validate`: Runs both format check and linting.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+<a name="español"></a>
 
-## Deploy on Vercel
+## 🇪🇸 Español
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Una aplicación web moderna construida con **Next.js** para explorar información sobre Colombia, utilizando la [API Colombia](https://api-colombia.com/).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 📸 Pantallazos
+
+_(Agrega tus capturas de pantalla aquí)_
+![Panel Principal](https://via.placeholder.com/800x450?text=Marcador+de+Posicion+Panel+Principal)
+![Vista de Datos](https://via.placeholder.com/800x450?text=Marcador+de+Posicion+Vista+de+Datos)
+
+### 🛠️ Tecnologías
+
+- **Framework:** [Next.js 15 (App Router)](https://nextjs.org/)
+- **Estilos:** [Tailwind CSS](https://tailwindcss.com/)
+- **Componentes:** [Radix UI](https://www.radix-ui.com/), [Shadcn UI](https://ui.shadcn.com/)
+- **Iconos:** [Phosphor Icons](https://phosphoricons.com/)
+- **Tablas:** [TanStack Table](https://tanstack.com/table)
+- **Gestión de Estado:** [Zustand](https://zustand-demo.pmnd.rs/) con Persistencia
+
+### 🚀 Configuración Inicial
+
+#### Requisitos
+
+- Node.js (Última versión LTS recomendada)
+- npm / yarn / pnpm
+
+#### Variables de Entorno
+
+Crea un archivo `.env.local` en el directorio raíz y añade:
+
+```bash
+NEXT_PUBLIC_API_COLOMBIA_URL=https://api-colombia.com/api/v1
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=tu_clave_de_google_maps_aqui
+```
+
+> [!IMPORTANT]
+> Las claves de Google Maps deben usar el prefijo `NEXT_PUBLIC_` para estar disponibles en el cliente.
+
+#### Instalación y Desarrollo
+
+1. Clona el repositorio
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+3. Inicia el servidor de desarrollo:
+   ```bash
+   npm run dev
+   ```
+
+### 📜 Comandos Disponibles
+
+- `npm run dev`: Inicia el servidor de desarrollo con Turbopack.
+- `npm run build`: Crea una versión optimizada para producción.
+- `npm run start`: Inicia el servidor de producción.
+- `npm run lint`: Ejecuta ESLint para encontrar problemas en el código.
+- `npm run lint:fix`: Corrige automáticamente los problemas de ESLint.
+- `npm run format`: Formatea el código usando Prettier.
+- `npm run validate`: Ejecuta la verificación de formato y el linting.
+
+### ⚙️ Configuración Adicional
+
+El proyecto incluye configuraciones específicas en `next.config.ts` para permitir imágenes de:
+
+- `images.unsplash.com`
+- `apicolombiastorage.blob.core.windows.net`
+- `upload.wikimedia.org`

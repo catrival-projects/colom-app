@@ -7,6 +7,7 @@ This is a Next.js application focused on displaying information about Colombia's
 -   **Framework**: Next.js 16 (App Router)
 -   **Language**: TypeScript
 -   **Styling**: Tailwind CSS 4
+-   **State Management**: Zustand (with SessionStorage persistence)
 -   **UI Library**: shadcn/ui (radix-ui based), tailwind-animate
 -   **Icons**: @phosphor-icons/react
 -   **Maps**: Google Maps API (@types/google.maps)
@@ -20,7 +21,7 @@ This is a Next.js application focused on displaying information about Colombia's
     -   `maps/`: Map-related components (`interactive-colombia-map`, `layer-toggle`).
     -   `shared/`: Reusable UI components (`navbar`, `header`).
     -   `ui/`: Base UI components (likely shadcn/ui).
--   `lib/`: Utility functions (`utils.ts`).
+-   `lib/`: Utility functions (`utils.ts`) and Stores (`stores/`).
 -   `services/`: API data fetching services.
 -   `types/`: TypeScript type definitions (`department`, `city`, `touristic-attraction`).
 -   `public/`: Static assets.
@@ -28,7 +29,9 @@ This is a Next.js application focused on displaying information about Colombia's
 ## Key Conventions
 -   **Styling**: Use Tailwind CSS utility classes. Avoid custom CSS when possible.
 -   **Components**: Functional components with TypeScript interfaces for props.
--   **State**: Use React hooks (`useState`, `useEffect`, `useMemo`).
+-   **State**: Use Zustand for global state with persistence where needed. Use React hooks for local component state.
+-   **Infinite Scroll**: Implement with scroll guards (Refs) to prevent redundant API calls.
+-   **Env Vars**: Client-side API keys (e.g., Google Maps) must be prefixed with `NEXT_PUBLIC_`.
 -   **Routing**: Next.js 13+ App Router conventions.
 
 ## Core Features

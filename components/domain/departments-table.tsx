@@ -201,11 +201,20 @@ export default function DepartmentsTable({ data, loading = false }: DepartmentsT
           </div>
         )}
 
-        {!loading && filteredData.length === 0 && (
+        {!loading && filteredData.length === 0 && search.trim().length > 0 && (
           <div className="p-12 text-center text-muted-foreground">
             No se encontraron resultados para &quot;{search}&quot;
           </div>
         )}
+
+        {!loading &&
+          filteredData.length === 0 &&
+          search.trim().length === 0 &&
+          data.length === 0 && (
+            <div className="p-12 text-center text-muted-foreground">
+              No hay departamentos para mostrar.
+            </div>
+          )}
       </div>
       <div className="text-xs text-muted-foreground text-center mt-4">
         Mostrando {filteredData.length} territorios
