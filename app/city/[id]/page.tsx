@@ -103,7 +103,7 @@ export default function CityPage() {
           )}
         </CardContent>
       </Card>
-      {process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ? (
+      {process.env.GOOGLE_MAPS_API_KEY ? (
         <GoogleMap cityName={city.name} />
       ) : (
         <OpenStreetMap cityName={city.name} />

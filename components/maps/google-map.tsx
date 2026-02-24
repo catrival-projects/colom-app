@@ -15,13 +15,13 @@ export interface GoogleMapProps {
 }
 
 export function GoogleMap({ cityName, height = 450, width = '100%' }: GoogleMapProps) {
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const apiKey = process.env.GOOGLE_MAPS_API_KEY;
   const { coordinates } = useCityCoordinates(cityName);
 
   if (!apiKey) {
     return (
       <MapError
-        error="Google Maps API key is not configured. Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to your environment variables."
+        error="Google Maps API key is not configured. Please add GOOGLE_MAPS_API_KEY to your environment variables."
         height={height}
       />
     );

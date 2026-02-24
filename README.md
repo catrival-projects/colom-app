@@ -39,7 +39,7 @@ Create a `.env.local` file in the root directory and add:
 
 ```bash
 NEXT_PUBLIC_API_COLOMBIA_URL=https://api-colombia.com/api/v1
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
+GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
 ```
 
 > [!IMPORTANT]
@@ -103,7 +103,7 @@ Crea un archivo `.env.local` en el directorio raíz y añade:
 
 ```bash
 NEXT_PUBLIC_API_COLOMBIA_URL=https://api-colombia.com/api/v1
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=tu_clave_de_google_maps_aqui
+GOOGLE_MAPS_API_KEY=tu_clave_de_google_maps_aqui
 ```
 
 > [!IMPORTANT]
