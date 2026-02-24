@@ -42,8 +42,8 @@ NEXT_PUBLIC_API_COLOMBIA_URL=https://api-colombia.com/api/v1
 GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
 ```
 
-> [!IMPORTANT]
-> Google Maps keys must use the `NEXT_PUBLIC_` prefix to be available on the client side.
+> [!NOTE]
+> `GOOGLE_MAPS_API_KEY` is handled securely via server-side API routes (`/api/maps/*`). It is **never** exposed to the client bundle.
 
 #### Installation & Development
 
@@ -106,8 +106,8 @@ NEXT_PUBLIC_API_COLOMBIA_URL=https://api-colombia.com/api/v1
 GOOGLE_MAPS_API_KEY=tu_clave_de_google_maps_aqui
 ```
 
-> [!IMPORTANT]
-> Las claves de Google Maps deben usar el prefijo `NEXT_PUBLIC_` para estar disponibles en el cliente.
+> [!NOTE]
+> `GOOGLE_MAPS_API_KEY` se maneja de forma segura mediante API routes del servidor (`/api/maps/*`). **Nunca** se expone al bundle del cliente.
 
 #### Instalación y Desarrollo
 

@@ -1,12 +1,14 @@
-export type MapLayer = 'attractions' | 'airports';
-
 /* The complete data about a map layer. */
 export interface LayerType {
-  id: MapLayer;
+  id: 'attractions' | 'airports';
   label: string;
   icon: string;
   description: string;
 }
+
+// Type for allowed layer IDs
+export type MapLayerId = LayerType['id'];
+
 /* The available map layers in the application. */
 export const MAP_LAYERS: LayerType[] = [
   {

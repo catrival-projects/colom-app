@@ -1,37 +1,56 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Department } from '@/types/department';
 import { OpenStreetMap, GoogleMap } from '@/components/maps';
 import { fetchDepartmentById } from '@/services/department-service';
+import { checkGoogleMapsAvailable } from '@/services/maps-api-service';
+
+type PageState = { department: Department | null; loading: boolean; error: string | null };
+type PageAction =
+  | { type: 'loading' }
+  | { type: 'success'; department: Department }
+  | { type: 'error'; error: string };
+
+function pageReducer(_state: PageState, action: PageAction): PageState {
+  switch (action.type) {
+    case 'loading':
+      return { department: null, loading: true, error: null };
+    case 'success':
+      return { department: action.department, loading: false, error: null };
+    case 'error':
+      return { department: null, loading: false, error: action.error };
+  }
+}
 
 export default function DepartmentPage() {
   const params = useParams();
-  const [department, setDepartment] = useState<Department | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [{ department, loading, error }, dispatch] = useReducer(pageReducer, {
+    department: null,
+    loading: true,
+    error: null,
+  });
+  const [googleMapsAvailable, setGoogleMapsAvailable] = useState(false);
 
   useEffect(() => {
     async function loadDepartment() {
-      setLoading(true);
-      setError(null);
+      dispatch({ type: 'loading' });
       try {
         const data = await fetchDepartmentById(Number(params.id));
-        setDepartment(data);
+        dispatch({ type: 'success', department: data });
       } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('Ocurrió un error desconocido');
-        }
-      } finally {
-        setLoading(false);
+        const message = err instanceof Error ? err.message : 'Ocurrió un error desconocido';
+        dispatch({ type: 'error', error: message });
       }
     }
     if (params.id) loadDepartment();
   }, [params.id]);
+
+  useEffect(() => {
+    checkGoogleMapsAvailable().then(setGoogleMapsAvailable);
+  }, []);
 
   if (loading) return <div className="text-center py-8">Cargando...</div>;
   if (error) return <div className="text-center py-8 text-red-600">{error}</div>;
@@ -53,7 +72,7 @@ export default function DepartmentPage() {
           </div>
         </CardContent>
       </Card>
-      {process.env.GOOGLE_MAPS_API_KEY ? (
+      {googleMapsAvailable ? (
         <GoogleMap cityName={department.name} />
       ) : (
         <OpenStreetMap cityName={department.name} />

@@ -1,12 +1,8 @@
 'use client';
 
-/**
- * GoogleMap Component
- * Component that renders a Google Maps embed
- */
-import { useCityCoordinates } from '@/lib/hooks/use-city-coordinates';
-import { MapUrlService } from '@/services/map-urls-service';
-import { MapIframe, MapError } from '@/components/ui/map';
+import { useEffect, useReducer } from 'react';
+import { MapIframe, MapError, MapLoading } from '@/components/ui/map';
+import { getGoogleMapsEmbedUrl } from '@/services/maps-api-service';
 
 export interface GoogleMapProps {
   cityName: string;
@@ -14,24 +10,47 @@ export interface GoogleMapProps {
   width?: string;
 }
 
-export function GoogleMap({ cityName, height = 450, width = '100%' }: GoogleMapProps) {
-  const apiKey = process.env.GOOGLE_MAPS_API_KEY;
-  const { coordinates } = useCityCoordinates(cityName);
+type MapState = { mapUrl: string | null; loading: boolean; error: string | null };
+type MapAction = { type: 'success'; url: string } | { type: 'error'; error: string };
 
-  if (!apiKey) {
-    return (
-      <MapError
-        error="Google Maps API key is not configured. Please add GOOGLE_MAPS_API_KEY to your environment variables."
-        height={height}
-      />
-    );
+function mapReducer(_state: MapState, action: MapAction): MapState {
+  switch (action.type) {
+    case 'success':
+      return { mapUrl: action.url, loading: false, error: null };
+    case 'error':
+      return { mapUrl: null, loading: false, error: action.error };
+  }
+}
+
+export function GoogleMap({ cityName, height = 450, width = '100%' }: GoogleMapProps) {
+  const [{ mapUrl, loading, error }, dispatch] = useReducer(mapReducer, {
+    mapUrl: null,
+    loading: true,
+    error: null,
+  });
+
+  useEffect(() => {
+    async function fetchEmbedUrl() {
+      try {
+        const url = await getGoogleMapsEmbedUrl(cityName);
+        dispatch({ type: 'success', url });
+      } catch (err) {
+        dispatch({
+          type: 'error',
+          error: err instanceof Error ? err.message : 'Error desconocido',
+        });
+      }
+    }
+    fetchEmbedUrl();
+  }, [cityName]);
+
+  if (loading) {
+    return <MapLoading cityName={cityName} height={height} />;
   }
 
-  const mapUrl = MapUrlService.generateGoogleMapUrl({
-    cityName,
-    coordinates,
-    apiKey,
-  });
+  if (error) {
+    return <MapError error={error} height={height} />;
+  }
 
   if (!mapUrl) {
     return <MapError error="No se pudo generar la URL del mapa de Google" height={height} />;
