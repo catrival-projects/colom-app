@@ -1,37 +1,56 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CityData } from '@/types/city-data';
 import { OpenStreetMap, GoogleMap } from '@/components/maps';
 import { fetchCityById } from '@/services/city-service';
+import { checkGoogleMapsAvailable } from '@/services/maps-api-service';
+
+type PageState = { city: CityData | null; loading: boolean; error: string | null };
+type PageAction =
+  | { type: 'loading' }
+  | { type: 'success'; city: CityData }
+  | { type: 'error'; error: string };
+
+function pageReducer(_state: PageState, action: PageAction): PageState {
+  switch (action.type) {
+    case 'loading':
+      return { city: null, loading: true, error: null };
+    case 'success':
+      return { city: action.city, loading: false, error: null };
+    case 'error':
+      return { city: null, loading: false, error: action.error };
+  }
+}
 
 export default function CityPage() {
   const params = useParams();
-  const [city, setCity] = useState<CityData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [{ city, loading, error }, dispatch] = useReducer(pageReducer, {
+    city: null,
+    loading: true,
+    error: null,
+  });
+  const [googleMapsAvailable, setGoogleMapsAvailable] = useState(false);
 
   useEffect(() => {
     async function fetchCity() {
-      setLoading(true);
-      setError(null);
+      dispatch({ type: 'loading' });
       try {
         const data = await fetchCityById(params.id as string);
-        setCity(data);
+        dispatch({ type: 'success', city: data });
       } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('Ocurrió un error desconocido');
-        }
-      } finally {
-        setLoading(false);
+        const message = err instanceof Error ? err.message : 'Ocurrió un error desconocido';
+        dispatch({ type: 'error', error: message });
       }
     }
     if (params.id) fetchCity();
   }, [params.id]);
+
+  useEffect(() => {
+    checkGoogleMapsAvailable().then(setGoogleMapsAvailable);
+  }, []);
 
   if (loading) return <div className="text-center py-8">Cargando...</div>;
   if (error) return <div className="text-center py-8 text-red-600">{error}</div>;
@@ -103,7 +122,7 @@ export default function CityPage() {
           )}
         </CardContent>
       </Card>
-      {process.env.GOOGLE_MAPS_API_KEY ? (
+      {googleMapsAvailable ? (
         <GoogleMap cityName={city.name} />
       ) : (
         <OpenStreetMap cityName={city.name} />

@@ -31,8 +31,25 @@ This is a Next.js application focused on displaying information about Colombia's
 -   **Components**: Functional components with TypeScript interfaces for props.
 -   **State**: Use Zustand for global state with persistence where needed. Use React hooks for local component state.
 -   **Infinite Scroll**: Implement with scroll guards (Refs) to prevent redundant API calls.
--   **Env Vars**: Client-side API keys (e.g., Google Maps) must be prefixed with `NEXT_PUBLIC_`.
+-   **Env Vars**:
+    - Public API URLs (no credentials) can use `NEXT_PUBLIC_` prefix
+    - Sensitive API keys MUST be private (no `NEXT_PUBLIC_` prefix) and injected via server routes
 -   **Routing**: Next.js 13+ App Router conventions.
+
+## External APIs & Security
+-   **NEXT_PUBLIC_API_COLOMBIA_URL**: Public Colombia data API (no auth required)
+    - Endpoints: `/Department`, `/City`, `/TouristicAttraction`
+    - ✅ Safe to expose - contains no sensitive data
+-   **GOOGLE_MAPS_API_KEY**: Private API key for Google Maps
+    - ✅ Securely injected via `/api/maps/embed` and `/api/maps/script` routes
+    - Never expose this key to the client - always route through backend
+-   **Nominatim API (OpenStreetMap)**: Free geocoding service
+    - ✅ Public API, no authentication required
+
+## Vercel Deployment Configuration
+When deploying to Vercel, configure these environment variables:
+-   `NEXT_PUBLIC_API_COLOMBIA_URL`: Set as public environment variable
+-   `GOOGLE_MAPS_API_KEY`: Set as private environment variable (no NEXT_PUBLIC_ prefix)
 
 ## Core Features
 1.  **Departments & Cities**: Tables and detail views for administrative divisions.

@@ -1,11 +1,11 @@
 'use client';
 
-import { MAP_LAYERS, type MapLayer } from '@/types/map-layer';
+import { MAP_LAYERS, type MapLayerId } from '@/types/map-layer';
 import { cn } from '@/lib/utils';
 
 interface LayerToggleProps {
-  activeLayers: MapLayer[];
-  onLayerToggle: (layer: MapLayer) => void;
+  activeLayers: MapLayerId[];
+  onLayerToggle: (layerId: MapLayerId) => void;
 }
 
 export default function LayerToggle({ activeLayers, onLayerToggle }: LayerToggleProps) {

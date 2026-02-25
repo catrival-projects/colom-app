@@ -2,11 +2,14 @@
 
 import { useEffect, useState, useRef } from 'react';
 import LayerToggle from './layer-toggle';
-import type { MapLayer } from '@/types/map-layer';
 import type { TouristicAttraction } from '@/types/touristic-attraction';
 import type { Airport } from '@/types/airport';
+import type { MapLayerId } from '@/types/map-layer';
+import { getGoogleMapsScriptUrl } from '@/services/maps-api-service';
 
 const COLOMBIA_CENTER = { lat: 4.5709, lng: -74.2973 };
+const EMPTY_ATTRACTIONS: TouristicAttraction[] = [];
+const EMPTY_AIRPORTS: Airport[] = [];
 
 interface InteractiveColombiaMapProps {
   attractions?: TouristicAttraction[];
@@ -14,46 +17,47 @@ interface InteractiveColombiaMapProps {
 }
 
 export default function InteractiveColombiaMap({
-  attractions = [],
-  airports = [],
+  attractions = EMPTY_ATTRACTIONS,
+  airports = EMPTY_AIRPORTS,
 }: InteractiveColombiaMapProps) {
-  const [activeLayers, setActiveLayers] = useState<MapLayer[]>(['attractions']);
+  const [activeLayers, setActiveLayers] = useState<MapLayerId[]>(['attractions']);
   const [mapScript, setMapScript] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
+  const markersRef = useRef<google.maps.Marker[]>([]);
 
-  const handleLayerToggle = (layer: MapLayer) => {
+  const handleLayerToggle = (layerId: MapLayerId) => {
     setActiveLayers((prev) =>
-      prev.includes(layer) ? prev.filter((l) => l !== layer) : [...prev, layer]
+      prev.includes(layerId) ? prev.filter((l) => l !== layerId) : [...prev, layerId]
     );
   };
 
   useEffect(() => {
-    const apiKey = process.env.GOOGLE_MAPS_API_KEY;
-    if (!apiKey) {
-      console.error('Google Maps API key is not configured');
-      return;
+    async function loadGoogleMapsScript() {
+      const scriptUrl = await getGoogleMapsScriptUrl();
+      if (!scriptUrl) {
+        console.error('Google Maps API key is not configured');
+        return;
+      }
+
+      const onScriptReady = () => setMapScript(true);
+      const scriptId = 'google-maps-script';
+      let script = document.getElementById(scriptId) as HTMLScriptElement | null;
+      if (!script) {
+        script = document.createElement('script');
+        script.id = scriptId;
+        script.src = scriptUrl;
+        script.async = true;
+        script.defer = true;
+        script.onload = onScriptReady;
+        document.head.appendChild(script);
+      } else if (window.google && window.google.maps) {
+        setTimeout(onScriptReady, 0);
+      } else {
+        script.onload = onScriptReady;
+      }
     }
 
-    const scriptId = 'google-maps-script';
-    let script = document.getElementById(scriptId) as HTMLScriptElement | null;
-    if (!script) {
-      script = document.createElement('script');
-      script.id = scriptId;
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
-      script.async = true;
-      script.defer = true;
-      script.onload = () => setMapScript(true);
-      document.head.appendChild(script);
-    } else if (window.google && window.google.maps) {
-      setTimeout(() => setMapScript(true), 0);
-    } else {
-      script.onload = () => setMapScript(true);
-    }
-
-    return () => {
-      // Solo limpia el callback para evitar fugas, pero no elimines el script global
-      if (script) script.onload = null;
-    };
+    loadGoogleMapsScript();
   }, []);
 
   useEffect(() => {
@@ -90,7 +94,11 @@ export default function InteractiveColombiaMap({
       (mapRef.current as HTMLElement & { __googleMap?: google.maps.Map }).__googleMap = map;
     }
 
-    // Add markers for airports.
+    // Limpiar marcadores previos
+    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current = [];
+
+    // Agregar marcadores de aeropuertos
     if (activeLayers.includes('airports') && airports.length > 0) {
       airports.forEach((airport) => {
         if (
@@ -99,7 +107,7 @@ export default function InteractiveColombiaMap({
           !isNaN(airport.latitude) &&
           !isNaN(airport.longitude)
         ) {
-          new window.google.maps.Marker({
+          const marker = new window.google.maps.Marker({
             position: { lat: airport.longitude, lng: airport.latitude },
             map: map,
             title: airport.name,
@@ -112,17 +120,18 @@ export default function InteractiveColombiaMap({
               strokeWeight: 2,
             } as google.maps.Symbol,
           });
+          markersRef.current.push(marker);
         }
       });
     }
 
-    // Add markers for attractions.
+    // Agregar marcadores de atracciones
     if (activeLayers.includes('attractions') && attractions.length > 0) {
       attractions.forEach((attraction) => {
         const lat = parseFloat(attraction.latitude);
         const lng = parseFloat(attraction.longitude);
         if (!isNaN(lat) && !isNaN(lng)) {
-          new window.google.maps.Marker({
+          const marker = new window.google.maps.Marker({
             position: { lat, lng },
             map: map,
             title: attraction.name,
@@ -135,6 +144,8 @@ export default function InteractiveColombiaMap({
               strokeWeight: 2,
             } as google.maps.Symbol,
           });
+          markersRef.current.push(marker);
+          markersRef.current.push(marker);
         }
       });
     }
@@ -146,8 +157,8 @@ export default function InteractiveColombiaMap({
 
       <div className="relative group">
         <div className="absolute -inset-1 bg-linear-to-r from-primary/20 to-accent/20 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-        <div className="relative bg-card rounded-2xl border border-border/60 shadow-lg overflow-hidden">
-          <div ref={mapRef} className="w-full h-[500px] md:h-[600px] bg-muted/20" />
+        <div className="relative bg-card rounded-2xl border-border/60 shadow-lg overflow-hidden">
+          <div ref={mapRef} className="w-full h-125 md:h-150 bg-muted/20" />
         </div>
       </div>
 
